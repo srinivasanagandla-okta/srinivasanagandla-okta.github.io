@@ -10,7 +10,7 @@ function getParameter(name){
 function generateKeyPair() {
 	var keyPair = null;
 	var promise_key = null;
-	var crypto = global.crypto || global.msCrypto;
+	var crypto = window.crypto;
 	if(crypto.subtle)
 	{
 	    //Parameters:
