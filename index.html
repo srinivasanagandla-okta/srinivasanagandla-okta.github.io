@@ -1,7 +1,6 @@
-Hello World
-
 <script type="text/javascript">
-console.log("Action parameter = "+getParameter("action"));
+	document.innerHTML = "Hello World";
+	console.log("Action parameter = "+getParameter("action"));
    generateKeyPair();
 function getParameter(name){
    if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
