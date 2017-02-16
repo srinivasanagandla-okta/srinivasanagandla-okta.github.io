@@ -1,17 +1,20 @@
 <html>
 <body>
+	Public Key: <br>
 	<div id="publicKey">
 	</div>
+	
+	<br> Private Key: <br>
 	<div id="privateKey">
 	</div>
 </body>
 
 <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 <script type="text/javascript">
-$("div#publicKey").html("Public Key");
-$("div#privateKey").html("Private Key");
+var keyPair = generateKeyPair();
+$("div#publicKey").html(JSON.stringify(keyPair.publicKey));
+$("div#privateKey").html(JSON.stringify(keyPair.privateKey));
 //<!--console.log("Action parameter = "+getParameter("action"));-->
-generateKeyPair();
 function getParameter(name){
    if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
       return decodeURIComponent(name[1]);
