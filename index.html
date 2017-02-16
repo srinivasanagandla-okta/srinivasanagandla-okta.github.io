@@ -34,8 +34,8 @@ function generateKeyPair() {
     		keyPair = key;
         	//private_key_object = key.privateKey;
         	//public_key_object = key.publicKey;
-        	console.log("PublicKey = "+key.publicKey);
-        	console.log("PrivateKey = "+key.privateKey);
+        	console.log("PublicKey = "+JSON.stringify(key.publicKey));
+        	console.log("PrivateKey = "+JSON.stringify(key.privateKey));
 		//publicKey = JSON.stringify(key.publicKey);
 		//privateKey = JSON.stringify(key.privateKey);
 		$("div#publicKey").html(JSON.stringify(keyPair.publicKey));
