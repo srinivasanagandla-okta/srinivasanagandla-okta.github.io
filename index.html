@@ -1,12 +1,11 @@
 <html>
 <body>
 	Public Key: <br>
-	<div id="publicKey">
-	</div>
-	
+	<textarea id="publicKey" length="2000">
 	<br> Private Key: <br>
-	<div id="privateKey">
-	</div>
+	<textarea id="privateKey" length="2000">
+	<br> JWT Token: <br>
+	<textarea id="jwtValue" length="2000">
 </body>
 
 <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
@@ -43,37 +42,65 @@ function getParameter(name){
       return decodeURIComponent(name[1]);
 }
 function generateKeyPair() {
-	var keyPair = null;
 	var promise_key = null;
 	var crypto = window.crypto;
 	if(crypto.subtle)
 	{
-	    //Parameters:
-    	//1. Asymmetric Encryption algorithm name and its requirements
-    	//2. Boolean indicating extractable. which indicates whether or not the raw keying material may be exported by the application (http://www.w3.org/TR/WebCryptoAPI/#dfn-CryptoKey-slot-extractable)
-    	//3. Usage of the keys. (http://www.w3.org/TR/WebCryptoAPI/#cryptokey-interface-types)
-    	promise_key = crypto.subtle.generateKey({name: "RSA-OAEP", modulusLength: 2048, publicExponent: new Uint8Array([0x01, 0x00, 0x01]), hash: {name: "SHA-256"}}, false, ["encrypt", "decrypt"]);
-    	promise_key.then(function(key){
-    		keyPair = key;
-        	//private_key_object = key.privateKey;
-        	//public_key_object = key.publicKey;
-        	console.log("PublicKey = "+JSON.stringify(key.publicKey));
-        	console.log("PrivateKey = "+JSON.stringify(key.privateKey));
-		//publicKey = JSON.stringify(key.publicKey);
-		//privateKey = JSON.stringify(key.privateKey);
-		//$("div#publicKey").html(JSON.stringify(keyPair.publicKey));
-		$("div#privateKey").html("PrivateKey");
-		promise = window.crypto.subtle.exportKey('spki',keyPair.publicKey);
-          	promise.then(function(spki) {
-              		$("div#publicKey").html(Uint8ArrayBuffer.toBase64(new Uint8Array(spki)));
-            	});
-    	});
-    	promise_key.catch = function(e){
-        	console.log(e.message);
-    	}
+    promise_key = crypto.subtle.generateKey({name: "RSA-OAEP", modulusLength: 2048, publicExponent: new Uint8Array([0x01, 0x00, 0x01]), hash: {name: "SHA-256"}}, false, ["encrypt", "decrypt"]);
+    promise_key.then(function(keyPair){
+		  $("div#privateKey").html("PrivateKey");
+		  promise = window.crypto.subtle.exportKey('spki',keyPair.publicKey);
+      promise.then(function(spki) {
+        $("#publicKey").val(Uint8ArrayBuffer.toBase64(new Uint8Array(spki)));
+      });
+      promise = window.crypto.subtle.exportKey('spki',keyPair.privateKey);
+      promise.then(function(spki) {
+        $("#privateKey").val(Uint8ArrayBuffer.toBase64(new Uint8Array(spki)));
+      });
+      
+    });
+    promise_key.catch = function(e){
+      console.log(e.message);
     }
-    return keyPair;
+  }
 }
-   
+
+function generateJwtToken(privateKey, factorId, userId, domain, txId) {
+  var timestamp = Math.floor(Date.now() / 1000);
+  var payload = {
+    iss: factorId,
+    sub: userId,
+    aud: domain,
+    jti: timestamp, // not validated, should be UUID
+    iat: timestamp,
+    exp: (timestamp + (2 * 60)),
+    nbf: (timestamp - (2 * 60)),
+    tx: txId,
+    result: 'APPROVE'
+  };
+
+  // header, typ is fixed value.
+  var header = { typ: 'JWT', alg: 'RS256' };
+  
+  // create segments, all segment should be base64 string
+  var segments = [];
+  segments.push(Base64Url.encode(JSON.stringify(header)));
+  segments.push(Base64Url.encode(JSON.stringify(payload)));
+
+  return window.crypto.subtle.sign({
+          name: "RSASSA-PKCS1-v1_5",
+          hash: {name: "SHA-256"}
+      },privateKey, Uint8ArrayBuffer.toUint8Array(segments.join('.')))
+      .then(function(signature) {
+        var base64 = Uint8ArrayBuffer.toBase64(new Uint8Array(signature));
+        segments.push(Base64Url.escape(base64));
+        return segments.join('.');
+      })
+      .then(function(jwt) {
+        $("#jwtValue").val(jwt);
+      });
+  });
+}
+	
 </script>
 </html>
