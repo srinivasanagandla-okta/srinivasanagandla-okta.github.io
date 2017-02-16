@@ -1,7 +1,9 @@
 <head>
 <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 <script type="text/javascript">
-console.log("Action parameter = "+getParameter("action"));
+$("div#publicKey").html("Public Key");
+$("div#publicKey").html("Private Key");
+//<!--console.log("Action parameter = "+getParameter("action"));-->
 generateKeyPair();
 function getParameter(name){
    if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
@@ -35,9 +37,8 @@ function generateKeyPair() {
 </script>
 </head>
 <body>
-	<div>
+	<div id="publicKey">
 	</div>
-	<script>
-		$( "div" ).html( "<span class='red'>Hello <b>Again</b></span>" );
-	</script>
+	<div id="privateKey">
+	</div>
 </body>
