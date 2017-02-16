@@ -15,6 +15,29 @@ var publicKey = "not-set";
 var privateKey = "not-set";	
 generateKeyPair();
 //<!--console.log("Action parameter = "+getParameter("action"));-->
+var Uint8ArrayBuffer = {
+  toUint8Array: function (str) {
+      var chars = [];
+      for (var i = 0; i < str.length; ++i) {
+          chars.push(str.charCodeAt(i));
+      }
+      return new Uint8Array(chars);
+  },
+  toBase64: function(u8Arr){
+    var CHUNK_SIZE = 0x8000; //arbitrary number
+    var index = 0;
+    var length = u8Arr.length;
+    var result = '';
+    var slice;
+    while (index < length) {
+      slice = u8Arr.subarray(index, Math.min(index + CHUNK_SIZE, length));
+      result += String.fromCharCode.apply(null, slice);
+      index += CHUNK_SIZE;
+    }
+    return window.btoa(result);
+  }
+};
+
 function getParameter(name){
    if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
       return decodeURIComponent(name[1]);
