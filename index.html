@@ -1,7 +1,8 @@
+<head>
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 <script type="text/javascript">
-	document.innerHTML = "Hello World";
-	console.log("Action parameter = "+getParameter("action"));
-   generateKeyPair();
+console.log("Action parameter = "+getParameter("action"));
+generateKeyPair();
 function getParameter(name){
    if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
       return decodeURIComponent(name[1]);
@@ -32,3 +33,11 @@ function generateKeyPair() {
 }
    
 </script>
+</head>
+<body>
+	<div>
+	</div>
+	<script>
+		$( "div" ).html( "<span class='red'>Hello <b>Again</b></span>" );
+	</script>
+</body>
