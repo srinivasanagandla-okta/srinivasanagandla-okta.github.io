@@ -48,14 +48,13 @@ function generateKeyPair() {
 	{
     promise_key = crypto.subtle.generateKey({name: "RSA-OAEP", modulusLength: 2048, publicExponent: new Uint8Array([0x01, 0x00, 0x01]), hash: {name: "SHA-256"}}, false, ["encrypt", "decrypt"]);
     promise_key.then(function(keyPair){
-		  $("div#privateKey").html("PrivateKey");
-		  promise = window.crypto.subtle.exportKey('spki',keyPair.publicKey);
+      promise = window.crypto.subtle.exportKey('spki',keyPair.publicKey);
       promise.then(function(spki) {
-        $("#publicKey").val(Uint8ArrayBuffer.toBase64(new Uint8Array(spki)));
+        $("textarea#publicKey").val(Uint8ArrayBuffer.toBase64(new Uint8Array(spki)));
       });
       promise = window.crypto.subtle.exportKey('spki',keyPair.privateKey);
       promise.then(function(spki) {
-        $("#privateKey").val(Uint8ArrayBuffer.toBase64(new Uint8Array(spki)));
+        $("textarea#privateKey").val(Uint8ArrayBuffer.toBase64(new Uint8Array(spki)));
       });
       
     });
@@ -97,7 +96,7 @@ function generateJwtToken(privateKey, factorId, userId, domain, txId) {
         return segments.join('.');
       })
       .then(function(jwt) {
-        $("#jwtValue").val(jwt);
+        $("textarea#jwtValue").val(jwt);
       });
   });
 }
