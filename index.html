@@ -43,7 +43,7 @@ function generateKeyPair() {
 		promise = window.crypto.subtle.exportKey('spki',keyPair.publicKey);
           	promise.then(function(spki) {
               		$("div#publicKey").html(Uint8ArrayBuffer.toBase64(new Uint8Array(spki)));
-            	};
+            	});
     	});
     	promise_key.catch = function(e){
         	console.log(e.message);
