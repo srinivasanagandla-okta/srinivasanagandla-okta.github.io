@@ -11,9 +11,9 @@
 
 <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 <script type="text/javascript">
-var keyPair = generateKeyPair();
-$("div#publicKey").html(JSON.stringify(keyPair.publicKey));
-$("div#privateKey").html(JSON.stringify(keyPair.privateKey));
+var publicKey = "not-set";
+var privateKey = "not-set";	
+generateKeyPair();
 //<!--console.log("Action parameter = "+getParameter("action"));-->
 function getParameter(name){
    if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
@@ -36,6 +36,10 @@ function generateKeyPair() {
         	//public_key_object = key.publicKey;
         	console.log("PublicKey = "+key.publicKey);
         	console.log("PrivateKey = "+key.privateKey);
+		//publicKey = JSON.stringify(key.publicKey);
+		//privateKey = JSON.stringify(key.privateKey);
+		$("div#publicKey").html(JSON.stringify(keyPair.publicKey));
+		$("div#privateKey").html(JSON.stringify(keyPair.privateKey));
     	});
     	promise_key.catch = function(e){
         	console.log(e.message);
