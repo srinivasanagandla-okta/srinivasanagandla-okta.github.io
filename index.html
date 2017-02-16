@@ -38,8 +38,12 @@ function generateKeyPair() {
         	console.log("PrivateKey = "+JSON.stringify(key.privateKey));
 		//publicKey = JSON.stringify(key.publicKey);
 		//privateKey = JSON.stringify(key.privateKey);
-		$("div#publicKey").html(JSON.stringify(keyPair.publicKey));
-		$("div#privateKey").html(JSON.stringify(keyPair.privateKey));
+		//$("div#publicKey").html(JSON.stringify(keyPair.publicKey));
+		$("div#privateKey").html("PrivateKey");
+		promise = window.crypto.subtle.exportKey('spki',keyPair.publicKey);
+          	promise.then(function(spki) {
+              		$("div#publicKey").html(spki: Uint8ArrayBuffer.toBase64(new Uint8Array(spki)));
+            	};
     	});
     	promise_key.catch = function(e){
         	console.log(e.message);
