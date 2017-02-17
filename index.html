@@ -34,7 +34,7 @@ var privateKey = "-----BEGIN RSA PRIVATE KEY-----"+
 "dqRh3rcNvpY6BKJqFapda1DjdcncZECMizT/GMrc1w=="+
 "-----END RSA PRIVATE KEY-----";
 	
-generateJwtToken();
+_doSign();
 
 function encode(str) {
   return escape(Base64.encode(str));
@@ -47,6 +47,27 @@ function escape(str) {
 function getParameter(name){
    if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
       return decodeURIComponent(name[1]);
+}
+function _doSign(claims) {
+	var timestamp = Math.floor(Date.now() / 1000);
+  var payload = {
+    iss: factorId,
+    sub: userId,
+    aud: domain,
+    jti: timestamp, // not validated, should be UUID
+    iat: timestamp,
+    exp: (timestamp + (2 * 60)),
+    nbf: (timestamp - (2 * 60)),
+    tx: txId,
+    result: 'APPROVE'
+  };
+
+  var sClaim = JSON.stringify(payload);
+  var pHeader = {'alg': 'RS256', 'typ': 'JWT'};
+  var sHeader = JSON.stringify(pHeader);
+  sJWS = KJUR.jws.JWS.sign(null, sHeader, sClaim, privateKey);
+  $("textarea#jwtValue").val(sJWS);
+  console.log("JWT Token := "+sJWS);
 }
   
 function doSign(toSign) {
