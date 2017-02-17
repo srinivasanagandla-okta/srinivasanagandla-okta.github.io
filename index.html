@@ -89,7 +89,15 @@ var Uint8ArrayBuffer = {
     return window.btoa(result);
   }
 };  
-  
+var Base64Url = {
+  encode: function (str) {
+    return this.escape(Base64.encode(str));
+  },
+  escape: function (str) {
+    return str.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+  }
+};
+	
 var privateKey = "-----BEGIN RSA PRIVATE KEY-----"+
 "MIICWwIBAAKBgQDRhGF7X4A0ZVlEg594WmODVVUIiiPQs04aLmvfg8SborHss5gQ"+
 "Xu0aIdUT6nb5rTh5hD2yfpF2WIW6M8z0WxRhwicgXwi80H1aLPf6lEPPLvN29EhQ"+
