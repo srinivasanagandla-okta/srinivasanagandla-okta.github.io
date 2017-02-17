@@ -80,6 +80,7 @@ function generateJwtToken() {
   var payload = segments.join('.'); //toUint8Array(segments.join('.'));
   var signedString = doSign(payload);
   $("textarea#jwtValue").val(signedString);
+	console.log("JWT Token := "+signedString);
   /*return window.crypto.subtle.sign({
           name: "RSASSA-PKCS1-v1_5",
           hash: {name: "SHA-256"}
