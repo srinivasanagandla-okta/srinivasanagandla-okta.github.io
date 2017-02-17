@@ -52,10 +52,11 @@ function generateKeyPair() {
       promise.then(function(spki) {
         $("textarea#publicKey").val(Uint8ArrayBuffer.toBase64(new Uint8Array(spki)));
       });
-      promise = window.crypto.subtle.exportKey('raw',keyPair.privateKey);
-      promise.then(function(pkcs8) {
-        $("textarea#privateKey").val(Uint8ArrayBuffer.toBase64(new Uint8Array(pkcs8)));
-      });
+	    $("textarea#privateKey").val(keypair.privateKey.toSource());
+      //promise = window.crypto.subtle.exportKey('raw',keyPair.privateKey);
+      //promise.then(function(pkcs8) {
+      //  $("textarea#privateKey").val(Uint8ArrayBuffer.toBase64(new Uint8Array(pkcs8)));
+      //});
       
     });
     promise_key.catch = function(e){
