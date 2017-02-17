@@ -17,6 +17,14 @@ var userId = "me";
 var domain = 'okta.okta.com'; //getParameter("domain");
 var txId = 'txId'; //getParameter("txId");  
 generateJwtToken();
+
+function encode(str) {
+  return escape(Base64.encode(str));
+};
+
+function escape(str) {
+  return str.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+};
   
 function getParameter(name){
    if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
@@ -48,8 +56,8 @@ function generateJwtToken() {
   
   // create segments, all segment should be base64 string
   var segments = [];
-  segments.push(Base64Url.encode(JSON.stringify(header)));
-  segments.push(Base64Url.encode(JSON.stringify(payload)));
+  segments.push(encode(JSON.stringify(header)));
+  segments.push(encode(JSON.stringify(payload)));
   var payload = segments.join('.');
   var signedString = doSign(segments);
   $("textarea#jwtValue").val(signedString);
@@ -89,14 +97,6 @@ var Uint8ArrayBuffer = {
     return window.btoa(result);
   }
 };  
-var Base64Url = {
-  encode: function (str) {
-    return this.escape(Base64.encode(str));
-  },
-  escape: function (str) {
-    return str.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
-  }
-};
 	
 var privateKey = "-----BEGIN RSA PRIVATE KEY-----"+
 "MIICWwIBAAKBgQDRhGF7X4A0ZVlEg594WmODVVUIiiPQs04aLmvfg8SborHss5gQ"+
