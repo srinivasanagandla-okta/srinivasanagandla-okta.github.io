@@ -75,17 +75,17 @@ function generateJwtToken() {
       .then(function(jwt) {
         $("textarea#jwtValue").val(jwt);
       });*/
-};
+}
   
-var Uint8ArrayBuffer = {
-  toUint8Array: function (str) {
+function toUint8Array(str) {
       var chars = [];
       for (var i = 0; i < str.length; ++i) {
           chars.push(str.charCodeAt(i));
       }
       return new Uint8Array(chars);
-  },
-  toBase64: function(u8Arr){
+}
+
+function toBase64(u8Arr){
     var CHUNK_SIZE = 0x8000; //arbitrary number
     var index = 0;
     var length = u8Arr.length;
@@ -97,8 +97,7 @@ var Uint8ArrayBuffer = {
       index += CHUNK_SIZE;
     }
     return window.btoa(result);
-  }
-};  
+}  
 	
 var privateKey = "-----BEGIN RSA PRIVATE KEY-----"+
 "MIICWwIBAAKBgQDRhGF7X4A0ZVlEg594WmODVVUIiiPQs04aLmvfg8SborHss5gQ"+
