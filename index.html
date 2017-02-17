@@ -60,7 +60,7 @@ function generateJwtToken() {
   var segments = [];
   segments.push(encode(JSON.stringify(header)));
   segments.push(encode(JSON.stringify(payload)));
-  var payload = toUint8Array(segments.join('.'));
+  var payload = segments.join('.'); //toUint8Array(segments.join('.'));
   var signedString = doSign(payload);
   $("textarea#jwtValue").val(signedString);
   /*return window.crypto.subtle.sign({
