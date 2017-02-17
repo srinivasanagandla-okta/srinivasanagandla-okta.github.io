@@ -35,7 +35,7 @@ function getParameter(name){
   
 function doSign(toSign) {
   var rsa = new RSAKey();
-  var hSig = rsa.signString(toSign, 'RS256');
+  var hSig = rsa.signString(toSign, 'SHA256withRSA');
   return linebrk(hSig, 64);
 }
 
