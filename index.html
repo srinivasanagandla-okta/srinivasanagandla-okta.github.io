@@ -9,11 +9,64 @@
 </body>
 
 <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://kjur.github.io/jsrsasign/jsrsasign-latest-all-min.js"></script>
 <script type="text/javascript">
-var publicKey = "not-set";
-var privateKey = "not-set";	
-generateKeyPair();
-//<!--console.log("Action parameter = "+getParameter("action"));-->
+
+var factorId = 'testFactorId'; //getParameter("factorId");
+var userId = "me";
+var domain = 'okta.okta.com'; //getParameter("domain");
+var txId = 'txId'; //getParameter("txId");  
+generateJwtToken();
+  
+function getParameter(name){
+   if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
+      return decodeURIComponent(name[1]);
+}
+  
+function doSign(toSign) {
+  var rsa = new RSAKey();
+  var hSig = rsa.signString(toSign, 'RS256');
+  return linebrk(hSig, 64);
+}
+
+function generateJwtToken() {
+  var timestamp = Math.floor(Date.now() / 1000);
+  var payload = {
+    iss: factorId,
+    sub: userId,
+    aud: domain,
+    jti: timestamp, // not validated, should be UUID
+    iat: timestamp,
+    exp: (timestamp + (2 * 60)),
+    nbf: (timestamp - (2 * 60)),
+    tx: txId,
+    result: 'APPROVE'
+  };
+
+  // header, typ is fixed value.
+  var header = { typ: 'JWT', alg: 'RS256' };
+  
+  // create segments, all segment should be base64 string
+  var segments = [];
+  segments.push(Base64Url.encode(JSON.stringify(header)));
+  segments.push(Base64Url.encode(JSON.stringify(payload)));
+  var payload = segments.join('.');
+  var signedString = doSign(segments);
+  $("textarea#jwtValue").val(signedString);
+  /*return window.crypto.subtle.sign({
+          name: "RSASSA-PKCS1-v1_5",
+          hash: {name: "SHA-256"}
+      },privateKey, Uint8ArrayBuffer.toUint8Array(segments.join('.')))
+      .then(function(signature) {
+        var base64 = Uint8ArrayBuffer.toBase64(new Uint8Array(signature));
+        segments.push(Base64Url.escape(base64));
+        return segments.join('.');
+      })
+      .then(function(jwt) {
+        $("textarea#jwtValue").val(jwt);
+      });*/
+};
+  
 var Uint8ArrayBuffer = {
   toUint8Array: function (str) {
       var chars = [];
@@ -35,71 +88,23 @@ var Uint8ArrayBuffer = {
     }
     return window.btoa(result);
   }
-};
-
-function getParameter(name){
-   if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
-      return decodeURIComponent(name[1]);
-}
-function generateKeyPair() {
-	var promise_key = null;
-	var crypto = window.crypto;
-	if(crypto.subtle)
-	{
-    promise_key = crypto.subtle.generateKey({name: "RSA-OAEP", modulusLength: 2048, publicExponent: new Uint8Array([0x01, 0x00, 0x01]), hash: {name: "SHA-256"}}, false, ["encrypt", "decrypt"]);
-    promise_key.then(function(keyPair){
-      promise = window.crypto.subtle.exportKey('spki',keyPair.publicKey);
-      promise.then(function(spki) {
-        $("textarea#publicKey").val(Uint8ArrayBuffer.toBase64(new Uint8Array(spki)));
-      });
-	    $("textarea#privateKey").val(keyPair.privateKey.toSource());
-      //promise = window.crypto.subtle.exportKey('raw',keyPair.privateKey);
-      //promise.then(function(pkcs8) {
-      //  $("textarea#privateKey").val(Uint8ArrayBuffer.toBase64(new Uint8Array(pkcs8)));
-      //});
-      
-    });
-    promise_key.catch = function(e){
-      console.log(e.message);
-    }
-  }
-}
-
-function generateJwtToken(privateKey, factorId, userId, domain, txId) {
-  var timestamp = Math.floor(Date.now() / 1000);
-  var payload = {
-    iss: factorId,
-    sub: userId,
-    aud: domain,
-    jti: timestamp, // not validated, should be UUID
-    iat: timestamp,
-    exp: (timestamp + (2 * 60)),
-    nbf: (timestamp - (2 * 60)),
-    tx: txId,
-    result: 'APPROVE'
-  };
-
-  // header, typ is fixed value.
-  var header = { typ: 'JWT', alg: 'RS256' };
+};  
   
-  // create segments, all segment should be base64 string
-  var segments = [];
-  segments.push(Base64Url.encode(JSON.stringify(header)));
-  segments.push(Base64Url.encode(JSON.stringify(payload)));
-
-  return window.crypto.subtle.sign({
-          name: "RSASSA-PKCS1-v1_5",
-          hash: {name: "SHA-256"}
-      },privateKey, Uint8ArrayBuffer.toUint8Array(segments.join('.')))
-      .then(function(signature) {
-        var base64 = Uint8ArrayBuffer.toBase64(new Uint8Array(signature));
-        segments.push(Base64Url.escape(base64));
-        return segments.join('.');
-      })
-      .then(function(jwt) {
-        $("textarea#jwtValue").val(jwt);
-      });
-}
+var privateKey = "-----BEGIN RSA PRIVATE KEY-----"+
+"MIICWwIBAAKBgQDRhGF7X4A0ZVlEg594WmODVVUIiiPQs04aLmvfg8SborHss5gQ"+
+"Xu0aIdUT6nb5rTh5hD2yfpF2WIW6M8z0WxRhwicgXwi80H1aLPf6lEPPLvN29EhQ"+
+"NjBpkFkAJUbS8uuhJEeKw0cE49g80eBBF4BCqSL6PFQbP9/rByxdxEoAIQIDAQAB"+
+"AoGAA9/q3Zk6ib2GFRpKDLO/O2KMnAfR+b4XJ6zMGeoZ7Lbpi3MW0Nawk9ckVaX0"+
+"ZVGqxbSIX5Cvp/yjHHpww+QbUFrw/gCjLiiYjM9E8C3uAF5AKJ0r4GBPl4u8K4bp"+
+"bXeSxSB60/wPQFiQAJVcA5xhZVzqNuF3EjuKdHsw+dk+dPECQQDubX/lVGFgD/xY"+
+"uchz56Yc7VHX+58BUkNSewSzwJRbcueqknXRWwj97SXqpnYfKqZq78dnEF10SWsr"+
+"/NMKi+7XAkEA4PVqDv/OZAbWr4syXZNv/Mpl4r5suzYMMUD9U8B2JIRnrhmGZPzL"+
+"x23N9J4hEJ+Xh8tSKVc80jOkrvGlSv+BxwJAaTOtjA3YTV+gU7Hdza53sCnSw/8F"+
+"YLrgc6NOJtYhX9xqdevbyn1lkU0zPr8mPYg/F84m6MXixm2iuSz8HZoyzwJARi2p"+
+"aYZ5/5B2lwroqnKdZBJMGKFpUDn7Mb5hiSgocxnvMkv6NjT66Xsi3iYakJII9q8C"+
+"Ma1qZvT/cigmdbAh7wJAQNXyoizuGEltiSaBXx4H29EdXNYWDJ9SS5f070BRbAIl"+
+"dqRh3rcNvpY6BKJqFapda1DjdcncZECMizT/GMrc1w=="+
+"-----END RSA PRIVATE KEY-----"
 	
 </script>
 </html>
