@@ -1,20 +1,16 @@
 <html>
 <body>
 	Public Key: <br>
-	<textarea id="publicKey" length="2000"></textarea>
+	<textarea id="publicKey" rows="20" cols="400"></textarea>
 	<br> Private Key: <br>
-	<textarea id="privateKey" length="2000"></textarea>
+	<textarea id="privateKey" rows="20" cols="400"></textarea>
 	<br> JWT Token: <br>
-	<textarea id="jwtValue" length="2000"></textarea>
+	<textarea id="jwtValue" rows="5" cols="400"></textarea>
 </body>
 <script language="JavaScript" type="text/javascript" src="https://code.jquery.com/jquery-1.10.2.js"></script>
 <script language="JavaScript" type="text/javascript" src="https://kjur.github.io/jsrsasign/jsrsasign-latest-all-min.js"></script>
 <script language="JavaScript" type="text/javascript">
 
-var factorId = 'testFactorId'; //getParameter("factorId");
-var userId = "me";
-var domain = 'okta.okta.com'; //getParameter("domain");
-var txId = 'txId'; //getParameter("txId");  
 var privateKey = "-----BEGIN PRIVATE KEY-----\n" +
 "MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDfdOqotHd55SYO\n" +
 "0dLz2oXengw/tZ+q3ZmOPeVmMuOMIYO/Cv1wk2U0OK4pug4OBSJPhl09Zs6IwB8N\n" +
@@ -51,14 +47,20 @@ var publicKey = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA33TqqLR3eeUmDtHS89q
             "wnxCsU5+UZUZYw87Uu0n4LPFS9BT8tUIvAfnRXIEWCha3KbFWmdZQZlyrFw0buUE"+
             "f0YN3/Q0auBkdbDR/ES2PbgKTJdkjc/rEeM0TxvOUf7HuUNOhrtAVEN1D5uuxE1W"+
             "SwIDAQAB";	
-_doSign();
+$("textarea#publicKey").val(publicKey);
+$("textarea#privateKey").val(privateKey);  
+generateJwtToken();
   
 function getParameter(name){
    if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
       return decodeURIComponent(name[1]);
 }
 
-function _doSign(claims) {
+function generateJwtToken() {
+  var factorId = getParameter("factorId");
+  var userId = "me";
+  var domain = getParameter("domain");
+  var txId = getParameter("txId");  
 	var timestamp = Math.floor(Date.now() / 1000);
   var payload = {
     iss: factorId,
