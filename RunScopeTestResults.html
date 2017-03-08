@@ -13,7 +13,9 @@ $(document).ready(function() {
         $.ajax({
           url: 'https://api.runscope.com/buckets/r9hwi2ufyz00/tests/0e420d10-4730-4c25-8e8b-052c22cdb77f/results?count=8',
           type: 'GET',
-          dataType: 'json',
+          dataType: 'jsonp',
+          crossOrigin: true,
+          xhrFields: { withCredentials: true },
           success: function(data) { console.log("Result = "+result); },
           error: function(error) { console.log("Error = "+error); },
           beforeSend: setHeader
