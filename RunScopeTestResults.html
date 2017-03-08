@@ -15,13 +15,14 @@ $(document).ready(function() {
           type: 'GET',
           dataType: 'json',
           success: function(data) { console.log("Result = "+result); },
-          error: function() { alert('boo!'); },
+          error: function(error) { console.log("Error = "+error); },
           beforeSend: setHeader
         });
       });
 
       function setHeader(xhr) {
         xhr.setRequestHeader('Authorization', 'Bearer 6241d4bb-434b-4feb-a963-a7c225c920a2');
+          console.log("Setting headers");
       }
 /*         if (!document.getElementsByTagName) return;
          tabBody=document.getElementsByTagName("tbody").item(0);
