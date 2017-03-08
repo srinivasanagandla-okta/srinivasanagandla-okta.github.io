@@ -9,24 +9,24 @@
 </table>
 </body>
 <script type="text/javascript">
-$(document).ready(function() {
-        $.ajax({
-          url: 'https://api.runscope.com/buckets/r9hwi2ufyz00/tests/0e420d10-4730-4c25-8e8b-052c22cdb77f/results?count=8',
-          type: 'GET',
-          dataType: 'json',
-          crossOrigin: true,
-      //    xhrFields: { withCredentials: true },
-          success: function(data) { console.log("Result = "+result); },
-          error: function(error) { console.log("Error = "+error); },
-          beforeSend: setHeader
-        });
-      });
+var data = null;
 
-      function setHeader(xhr) {
-        xhr.setRequestHeader("Authorization", "Bearer 6241d4bb-434b-4feb-a963-a7c225c920a2");
-          console.log("Setting headers");
-      }
-/*         if (!document.getElementsByTagName) return;
+var xhr = new XMLHttpRequest();
+xhr.withCredentials = true;
+
+xhr.addEventListener("readystatechange", function () {
+  if (this.readyState === 4) {
+    console.log(this.responseText);
+  }
+});
+
+xhr.open("GET", "https://api.runscope.com/buckets/r9hwi2ufyz00/tests/0e420d10-4730-4c25-8e8b-052c22cdb77f/results?count=8");
+xhr.setRequestHeader("authorization", "Bearer 6241d4bb-434b-4feb-a963-a7c225c920a2");
+xhr.setRequestHeader("cache-control", "no-cache");
+xhr.setRequestHeader("postman-token", "ac86a12b-a8e6-1beb-7cad-7dd119423a44");
+
+xhr.send(data);
+    /*         if (!document.getElementsByTagName) return;
          tabBody=document.getElementsByTagName("tbody").item(0);
          row=document.createElement("tr");
          cell1 = document.createElement("td");
