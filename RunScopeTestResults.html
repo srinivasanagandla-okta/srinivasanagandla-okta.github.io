@@ -53,8 +53,8 @@ $.ajax({
         }
         var cell = document.getElementById(environment_name+"."+testResult.test_id);
         if (cell) {
-          var testStatus = testResult.result
-          cell.innerHTML = testStatus;
+          var testStatus = testResult.result;
+          cell.innerHTML = "<a href="+testResult.test_run_url+">"+testStatus+"</a>";
           if (testStatus == "pass") {
             cell.bgColor = "Green";
           } else if (testStatus == "fail") {
