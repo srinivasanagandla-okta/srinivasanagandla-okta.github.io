@@ -3,6 +3,29 @@
   <!--<link href="http://codepen.io/jordyvanraaij/pen/jlAqp.css" rel="stylesheet" media="screen" />-->
   <link href="css/EyABe.css" type="text/css" rel="stylesheet" />
   <script src="https://code.jquery.com/jquery-3.1.1.js"></script>
+  <style>
+    .pass {
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    background: green;
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .fail {
+    width: 30px;
+    height: 30px;
+    border-radius: 15px;
+    background: red;
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    vertical-align: middle;
+  }
+</style>
 </head>
 <body>
 <table border='1' id='runScopeResults'>
@@ -67,9 +90,11 @@ $.ajax({
         var testResult = results[resultIndex];
         var environment_name = testResult.environment_name;
         var testStatus = testResult.result;
-        var isSpacePresent = environment_name.indexOf(' ') > 1 ? true: false;
-        if (isSpacePresent) {
-          environment_name = environment_name.substr(0, environment_name.indexOf(' '));
+        for (envIndex=0; envIndex < environments.length; envIndex++) {
+          if (environment_name.indexOf(environments[envIndex]) >= 0) {
+            environment_name = environments[envIndex];
+            break;
+          }
         }
         var testIdByEnv = environment_name+"."+testResult.test_id;
         //console.log("Looking by ["+testIdByEnv+"]");
@@ -85,16 +110,18 @@ $.ajax({
           } else if (testStatus == "fail") {
             testResultEntry.fail = testResultEntry.fail + 1;
           }
+          /*
           if (testResultEntry.pass == testResultEntry.fail) {
             cell.bgColor = "Yellow";            
           } else if (testResultEntry.pass > testResultEntry.fail) {
             cell.bgColor = "Green";
           } else {
             cell.bgColor = "Red";
-          }
-          var cellHtml = "<a href='"+testResultsUrl+"'>"+testResultEntry.pass+"/"+(testResultEntry.pass+testResultEntry.fail)+"</a>";
+          }*/
+          var cellHtml = "<div class='"+testStatus+"'> <a href='https://api.runscope.com/buckets/"+bucketId+"/tests/"+testResult.test_id+"/results'>"
+              +testResultEntry.pass+"/"+(testResultEntry.pass+testResultEntry.fail)+"</a></div>";
           if (testResultEntry.pass+testResultEntry.fail == 1) {
-              cellHtml = "<a href='"+testResult.test_run_url+"'>&nbsp;</a>";
+              cellHtml = "<div class='"+testStatus+"'> <a href='"+testResult.test_run_url+"'></a></div>";
           }
           //console.log("Cell HTML = ["+cellHtml+"]");
           cell.innerHTML = cellHtml;
