@@ -1,6 +1,8 @@
 <html>
 <head>
-    <script src="https://code.jquery.com/jquery-3.1.1.js"></script>
+  <!--<link href="http://codepen.io/jordyvanraaij/pen/jlAqp.css" rel="stylesheet" media="screen" />-->
+  <link href="http://codepen.io/jackrugile/pen/EyABe.css" rel="stylesheet" media="screen" />
+  <script src="https://code.jquery.com/jquery-3.1.1.js"></script>
 </head>
 <body>
 <table border='1' id='runScopeResults'>
@@ -18,48 +20,84 @@
 </tbody>
 </table>
 </body>
+
 <script type="text/javascript">
+var since = "latest";
+var durationParamValue = getParameter("duration"); //duration in hours
+if (durationParamValue != "latest") {
+  since = Math.round(+new Date()/1000) - (durationParamValue * 3600); 
+}
+
 var bucketId = "r9hwi2ufyz00";
 var environments = ["TC", "Preview", "OK1", "OK2", "OK3", "OK4", "OK5", "EU1" ];
- 
+var listOfTestsUrl = "https://api.runscope.com/buckets/"+bucketId+"/tests?count=100";
+var testResultsMap = new Map();
+
 //Add a row table with test-name and all the cells with the right id
 $.ajax({
-  url: "https://api.runscope.com/buckets/"+bucketId+"/tests?count=100"
+  url: listOfTestsUrl
 }).done(function(response) {
   var tests = response.data;
   console.log("Number of tests in the bucket is = "+tests.length);
   var table = document.getElementById("runScopeResults");
-  for (i=0; i<tests.length; i++) {
+  for (testIndex=0; testIndex<tests.length; testIndex++) {
     var row = table.insertRow(-1);
     var nameCell = row.insertCell(0);
-    nameCell.id = tests[i].id;
-    nameCell.innerHTML = tests[i].name;
+    nameCell.id = tests[testIndex].id;
+    nameCell.innerHTML = tests[testIndex].name;
     for (j=1; j<=environments.length; j++) {
-      var cell = row.insertCell(j);
-      cell.id = environments[j-1]+"."+tests[i].id;
-      cell.innerHTML = "&nbsp;";
+      var envCell = row.insertCell(j);
+      envCell.id = environments[j-1]+"."+tests[testIndex].id;
+      envCell.innerHTML = "&nbsp;";
     }
     //Now get results for the test
+    var testResultsUrl = "https://api.runscope.com/buckets/"+bucketId+"/tests/"+tests[testIndex].id+"/results";
+    if (since != "latest") {
+      testResultsUrl = testResultsUrl + "?count=100&since="+since;
+    } else {
+      testResultsUrl = testResultsUrl + "?count=8";
+    }
+    console.log("Test Results Url = ["+testResultsUrl+"]");
     $.ajax({
-      url: "https://api.runscope.com/buckets/"+bucketId+"/tests/"+tests[i].id+"/results?count=8"
+      url: testResultsUrl
     }).done(function(testResultsResponse) {
       var results = testResultsResponse.data;
+      console.log("Result count for test = "+results.length);
       for (resultIndex=0; resultIndex<results.length; resultIndex++) {
         var testResult = results[resultIndex];
         var environment_name = testResult.environment_name;
+        var testStatus = testResult.result;
         var isSpacePresent = environment_name.indexOf(' ') > 1 ? true: false;
         if (isSpacePresent) {
           environment_name = environment_name.substr(0, environment_name.indexOf(' '));
         }
-        var cell = document.getElementById(environment_name+"."+testResult.test_id);
+        var testIdByEnv = environment_name+"."+testResult.test_id;
+        //console.log("Looking by ["+testIdByEnv+"]");
+        var cell = document.getElementById(testIdByEnv);
         if (cell) {
-          var testStatus = testResult.result;
-          cell.innerHTML = "<a href="+testResult.test_run_url+">"+testStatus+"</a>";
+          var testResultEntry = testResultsMap.get(testIdByEnv);
+          if (!testResultEntry) {
+            testResultEntry = {fail:0, pass:0};
+            testResultsMap.set(testIdByEnv, testResultEntry);
+          }
           if (testStatus == "pass") {
-            cell.bgColor = "Green";
+            testResultEntry.pass = testResultEntry.pass + 1;
           } else if (testStatus == "fail") {
+            testResultEntry.fail = testResultEntry.fail + 1;
+          }
+          if (testResultEntry.pass == testResultEntry.fail) {
+            cell.bgColor = "Yellow";            
+          } else if (testResultEntry.pass > testResultEntry.fail) {
+            cell.bgColor = "Green";
+          } else {
             cell.bgColor = "Red";
           }
+          var cellHtml = "<a href='"+testResultsUrl+"'>"+testResultEntry.pass+"/"+(testResultEntry.pass+testResultEntry.fail)+"</a>";
+          if (testResultEntry.pass+testResultEntry.fail == 1) {
+              cellHtml = "<a href='"+testResult.test_run_url+"'>&nbsp;</a>";
+          }
+          //console.log("Cell HTML = ["+cellHtml+"]");
+          cell.innerHTML = cellHtml;
         } else {
           console.log("Cell with Id = ["+environment_name+"."+testResult.test_id+"] not found");
         }
@@ -67,6 +105,11 @@ $.ajax({
     });
   }
 });
-
+function getParameter(name){
+   var paramValue = "latest";
+   if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
+      paramValue = decodeURIComponent(name[1]);
+   return paramValue;   
+}
 </script>
 </html>
