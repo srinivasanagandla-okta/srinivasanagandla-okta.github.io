@@ -110,10 +110,15 @@ $.ajax({
           } else if (testStatus == "fail") {
             testResultEntry.fail = testResultEntry.fail + 1;
           }
-          var cellHtml = "<div class='"+testStatus+"'> <a href='https://www.runscope.com/radar/"+bucketId+"/"+testResult.test_id+"/results'>"
-              +testResultEntry.pass+"/"+(testResultEntry.pass+testResultEntry.fail)+"</a></div>";
+
+          //Don't show anything if there are no test results for this environment
+          if (testResultEntry.pass+testResultEntry.fail == 0) {
+            continue;
+          }
+          var cellHtml = "<a href='https://www.runscope.com/radar/"+bucketId+"/"+testResult.test_id+"/results'> <div class='"+testStatus+"' title='"+environment_name+"'>"
+              +testResultEntry.pass+"/"+(testResultEntry.pass+testResultEntry.fail)+"</div></a>";
           if (testResultEntry.pass+testResultEntry.fail == 1) {
-              cellHtml = "<a href='https://www.runscope.com/radar/"+bucketId+"/"+testResult.test_id+"/results/"+testResult.test_run_id+"'><div class='"+testStatus+"'> </div></a>";
+              cellHtml = "<a href='https://www.runscope.com/radar/"+bucketId+"/"+testResult.test_id+"/results/"+testResult.test_run_id+"'><div class='"+testStatus+"' title='"+environment_name+"'> </div></a>";
           }
           cell.innerHTML = cellHtml;
         } else {
