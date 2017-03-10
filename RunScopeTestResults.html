@@ -45,13 +45,20 @@
 </body>
 
 <script type="text/javascript">
-var since = "latest";
+
+var since = Math.round(+new Date()/1000) -  (3600); //default is for the last 1 hour
+
+//Check if duration is specified as a parameter
 var durationParamValue = getParameter("duration"); //duration in hours
-if (durationParamValue != "latest") {
+if (durationParamValue != "default") {
   since = Math.round(+new Date()/1000) - (durationParamValue * 3600); 
 }
 
-var bucketId = "r9hwi2ufyz00";
+//Check bucketId parameter otherwise set the auth bucketId as default
+var bucketId = getParameter("bucketId");
+if (bucketId == "default") {
+  bucketId = "r9hwi2ufyz00"; 
+}
 var environments = ["TC", "Preview", "OK1", "OK2", "OK3", "OK4", "OK5", "EU1" ];
 var listOfTestsUrl = "https://api.runscope.com/buckets/"+bucketId+"/tests?count=100";
 var testResultsMap = new Map();
@@ -75,13 +82,7 @@ $.ajax({
       envCell.innerHTML = "&nbsp;";
     }
     //Now get results for the test
-    var testResultsUrl = "https://api.runscope.com/buckets/"+bucketId+"/tests/"+tests[testIndex].id+"/results";
-    if (since != "latest") {
-      testResultsUrl = testResultsUrl + "?count=100&since="+since;
-    } else {
-      testResultsUrl = testResultsUrl + "?count=8";
-    }
-    console.log("Test Results Url = ["+testResultsUrl+"]");
+    var testResultsUrl = "https://api.runscope.com/buckets/"+bucketId+"/tests/"+tests[testIndex].id+"/results?count=100&since="+since;
     $.ajax({
       url: testResultsUrl
     }).done(function(testResultsResponse) {
@@ -129,7 +130,7 @@ $.ajax({
   }
 });
 function getParameter(name){
-   var paramValue = "latest";
+   var paramValue = "default";
    if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
       paramValue = decodeURIComponent(name[1]);
    return paramValue;   
