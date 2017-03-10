@@ -60,7 +60,8 @@ var testResultsMap = new Map();
 $.ajax({
   url: listOfTestsUrl
 }).done(function(response) {
-  var tests = response.data;
+  var tests = sortTestsByName(response.data);
+
   console.log("Number of tests in the bucket is = "+tests.length);
   var table = document.getElementById("runScopeResults");
   for (testIndex=0; testIndex<tests.length; testIndex++) {
@@ -97,7 +98,6 @@ $.ajax({
           }
         }
         var testIdByEnv = environment_name+"."+testResult.test_id;
-        //console.log("Looking by ["+testIdByEnv+"]");
         var cell = document.getElementById(testIdByEnv);
         if (cell) {
           var testResultEntry = testResultsMap.get(testIdByEnv);
@@ -110,20 +110,11 @@ $.ajax({
           } else if (testStatus == "fail") {
             testResultEntry.fail = testResultEntry.fail + 1;
           }
-          /*
-          if (testResultEntry.pass == testResultEntry.fail) {
-            cell.bgColor = "Yellow";            
-          } else if (testResultEntry.pass > testResultEntry.fail) {
-            cell.bgColor = "Green";
-          } else {
-            cell.bgColor = "Red";
-          }*/
-          var cellHtml = "<div class='"+testStatus+"'> <a href='https://api.runscope.com/buckets/"+bucketId+"/tests/"+testResult.test_id+"/results'>"
+          var cellHtml = "<div class='"+testStatus+"'> <a href='https://www.runscope.com/radar/"+bucketId+"/"+testResult.test_id+"/results'>"
               +testResultEntry.pass+"/"+(testResultEntry.pass+testResultEntry.fail)+"</a></div>";
           if (testResultEntry.pass+testResultEntry.fail == 1) {
-              cellHtml = "<div class='"+testStatus+"'> <a href='"+testResult.test_run_url+"'></a></div>";
+              cellHtml = "<a href='https://www.runscope.com/radar/"+bucketId+"/"+testResult.test_id+"/results/"+testResult.test_run_id+"'><div class='"+testStatus+"'> </div></a>";
           }
-          //console.log("Cell HTML = ["+cellHtml+"]");
           cell.innerHTML = cellHtml;
         } else {
           console.log("Cell with Id = ["+environment_name+"."+testResult.test_id+"] not found");
@@ -138,5 +129,18 @@ function getParameter(name){
       paramValue = decodeURIComponent(name[1]);
    return paramValue;   
 }
+
+function sortTestsByName(arrayOfTests) {
+  return arrayOfTests.sort(function(testA, testB) {
+    if (testA.name < testB.name) {
+      return -1;
+    } else if (testA.name > testB.name) {
+      return 1;
+    } else {
+      return 0;
+    }
+  });
+}
+
 </script>
 </html>
