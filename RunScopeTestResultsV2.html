@@ -28,11 +28,11 @@
 </head>
 <body>
 <form>
-  <input type="text" name="username">
+  <input type="hidden" name="username" id="username">
 <table>
   <tr>
     <td><b> Access Token Value : </b></td>
-    <td> <input type="password" name="password" id="token" size=40> <input type="submit" name="go" value="Get Buckets..." onclick="populateBuckets();"> </td>
+    <td> <input type="password" name="password" id="token" size=40> <input type="button" id="getBuckets" value="Get Buckets..." onclick="populateBuckets();"> </td>
   </tr>
   <tr>
     <td> <b> Choose Test Bucket : </b></td>
@@ -40,7 +40,7 @@
   </tr>
   <tr>
     <td> <b> Since Last : </b></td>
-    <td> <input type="text" id="duration" value="1" size=2> hour(s) <input type="submit" name="go" value="Go.." onclick="go();"></td>
+    <td> <input type="text" id="duration" value="1" size=2> hour(s) <input type="button" name="go" value="Go.." onclick="go();"></td>
   </tr>
 </table>    
 <table border='1' id='runScopeResults'>
