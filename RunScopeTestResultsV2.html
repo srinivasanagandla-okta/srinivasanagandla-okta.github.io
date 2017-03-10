@@ -40,7 +40,7 @@
   </tr>
   <tr>
     <td> <b> Since Last : </b></td>
-    <td> <input type="text" id="duration" value="1" size=2> hour(s) <input type="button" name="go" value="Go.." onclick="go();"></td>
+    <td> <input type="text" id="duration" value="1" size=2> hour(s) <input type="button" name="go" value="Go.." onclick="getResults();"></td>
   </tr>
 </table>    
 <table border='1' id='runScopeResults'>
@@ -80,10 +80,9 @@ function populateBuckets() {
       document.getElementById("testBuckets").options.add(opt);
     }
   });
-
 }
 
-function go() {
+function getResults() {
   var testBuckets = document.getElementById("testBuckets");
   var bucketId = testBuckets.options[testBuckets.selectedIndex].value;
   //var bucketId = document.getElementById("testBucketId").value;
