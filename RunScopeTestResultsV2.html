@@ -168,10 +168,10 @@ function renderResults(bucketId, authorizationValue, duration) {
               if (testResultEntry.pass+testResultEntry.fail == 0) {
                 continue;
               }
-              var cellHtml = "<a href='https://www.runscope.com/radar/"+bucketId+"/"+testResult.test_id+"/results'> <div class='"+testStatus+"' title='"+environment_name+"'>"
+              var cellHtml = "<a href='https://www.runscope.com/radar/"+bucketId+"/"+testResult.test_id+"/results' target='_blank'> <div class='"+testStatus+"' title='"+environment_name+"'>"
                   +testResultEntry.pass+"/"+(testResultEntry.pass+testResultEntry.fail)+"</div></a>";
               if (testResultEntry.pass+testResultEntry.fail == 1) {
-                  cellHtml = "<a href='https://www.runscope.com/radar/"+bucketId+"/"+testResult.test_id+"/results/"+testResult.test_run_id+"'><div class='"+testStatus+"' title='"+environment_name+"'> </div></a>";
+                  cellHtml = "<a href='https://www.runscope.com/radar/"+bucketId+"/"+testResult.test_id+"/results/"+testResult.test_run_id+"' target='_blank'><div class='"+testStatus+"' title='"+environment_name+"'> </div></a>";
               }
               cell.innerHTML = cellHtml;
             } else {
