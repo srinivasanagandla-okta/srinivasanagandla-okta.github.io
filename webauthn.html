@@ -1,5 +1,33 @@
 <html>
+  <script>
+    function enroll() {
+      var makeCredentialOptions = {
+        challenge: "1234",
+        rp: {
+          name: "ACME Corporation"
+        },
+        user: {
+          id: "12345",
+          name: "user@example.com",
+          display: "Test User"
+        },
+        pubKeyCredParams: [
+          {type: "public-key", alg: -7},
+          {type: "public-key", alg: -257}
+        ]
+      }
+      navigator.credentials.create({
+                publicKey: makeCredentialOptions
+            }).then(function (newCredential) {
+                    console.log("PublicKeyCredential Created");
+                    console.log(newCredential);
+            }).catch(function (err) {
+                console.log(err);
+                swal.closeModal();
+            });
+    }
+  </script>
 <body>
-<input type="button" name="enroll" value="enroll">
+<input type="button" name="enroll" value="enroll" onclick="enroll()">
 </body>
 </html>
