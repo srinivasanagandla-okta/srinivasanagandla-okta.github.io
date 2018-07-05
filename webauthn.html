@@ -1,13 +1,18 @@
 <html>
   <script>
     function enroll() {
+      var randomChallengeBuffer = new Uint8Array(32); 
+      window.crypto.getRandomValues(randomChallengeBuffer); 
+      var base64id = 'MIIBkzCCATigAwIBAjCCAZMwggE4oAMCAQIwggGTMII=';
+      var idBuffer = Uint8Array.from(window.atob(base64id), c=>c.charCodeAt(0));
+      
       var makeCredentialOptions = {
-        challenge: "1234",
+        challenge: randomChallengeBuffer,
         rp: {
           name: "ACME Corporation"
         },
         user: {
-          id: "12345",
+          id: idBuffer,
           name: "user@example.com",
           display: "Test User"
         },
