@@ -11,6 +11,10 @@
         userVerification: "preferred"
       };
       
+      var enrollExtensions = {
+        uvm: true
+      }
+      
       var makeCredentialOptions = {
         challenge: randomChallengeBuffer,
         rp: {
@@ -23,6 +27,7 @@
           displayName: "Test User"
         },
         authenticatorSelection: authenticatorSelectionCriteria,
+        extensions: enrollExtensions,
         pubKeyCredParams: [
           {type: "public-key", alg: -7},
           {type: "public-key", alg: -257}
