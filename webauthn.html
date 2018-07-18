@@ -3,6 +3,9 @@
     function verify() {
       var randomChallengeBuffer = new Uint8Array(32); 
       window.crypto.getRandomValues(randomChallengeBuffer); 
+      var base64id = 'MIIBkzCCATigAwIBAjCCAZMwggE4oAMCAQIwggGTMII=';
+      var idBuffer = Uint8Array.from(window.atob(base64id), c=>c.charCodeAt(0));
+
       var authenticatorSelectionCriteria = {
         authenticatorAttachment: "cross-platform",
         requireResidentKey: false,
@@ -10,7 +13,7 @@
       };
 
       var verifyOptions = {
-        challenge: randomChallengeBuffer,
+        challenge: idBuffer,
         rp: {
           id:"srinivasanagandla-okta.github.io",
           name: "ACME Corporation"
