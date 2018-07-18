@@ -17,15 +17,9 @@
         }     
       }
 
-      navigator.credentials.get(
-          [
-            {
-              publicKey: verifyOptions
-            }
-          ]
-        ).then(function (newCredential) {
-            console.log("PublicKeyCredential Created");
-            console.log(newCredential);
+      navigator.credentials.get({ publicKey: verifyOptions})
+        .then(function (credential) {
+            console.log(credential);
           }).catch(function (err) {
                 console.log(err);
           });
