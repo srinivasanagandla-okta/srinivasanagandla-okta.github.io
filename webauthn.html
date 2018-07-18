@@ -1,5 +1,36 @@
 <html>
   <script>
+    function verify() {
+      var randomChallengeBuffer = new Uint8Array(32); 
+      window.crypto.getRandomValues(randomChallengeBuffer); 
+      var authenticatorSelectionCriteria = {
+        authenticatorAttachment: "cross-platform",
+        requireResidentKey: false,
+        userVerification: "preferred"
+      };
+
+      var verifyOptions = {
+        challenge: randomChallengeBuffer,
+        rp: {
+          id:"srinivasanagandla-okta.github.io",
+          name: "ACME Corporation"
+        },
+        authenticatorSelection: authenticatorSelectionCriteria,
+      }
+
+      navigator.credentials.get(
+          [
+            {
+              publicKey: verifyOptions
+            }
+          ]
+        ).then(function (newCredential) {
+            console.log("PublicKeyCredential Created");
+            console.log(newCredential);
+          }).catch(function (err) {
+                console.log(err);
+          });
+    }
     function enroll() {
       var randomChallengeBuffer = new Uint8Array(32); 
       window.crypto.getRandomValues(randomChallengeBuffer); 
@@ -45,5 +76,6 @@
   </script>
 <body>
 <input type="button" name="enroll" value="enroll" onclick="enroll()">
+<input type="button" name="enroll" value="verify" onclick="verify()">
 </body>
 </html>
