@@ -7,8 +7,7 @@
       var idBuffer = Uint8Array.from(window.atob(base64id), c=>c.charCodeAt(0));
 
       var authenticatorSelectionCriteria = {
-        authenticatorAttachment: "cross-platform",
-        requireResidentKey: false,
+        requireResidentKey: true,
         userVerification: "optional"
       };
 
@@ -18,7 +17,11 @@
           id:"srinivasanagandla-okta.github.io",
           name: "ACME Corporation"
         },
-        authenticatorSelection: authenticatorSelectionCriteria
+        authenticatorSelection: authenticatorSelectionCriteria,
+        pubKeyCredParams: [
+          {type: "public-key", alg: -7},
+          {type: "public-key", alg: -257}
+        ]
       }
 
       navigator.credentials.get({ publicKey: verifyOptions})
