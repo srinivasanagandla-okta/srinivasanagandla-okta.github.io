@@ -37,8 +37,8 @@
       var base64id = 'MIIBkzCCATigAwIBAjCCAZMwggE4oAMCAQIwggGTMII=';
       var idBuffer = Uint8Array.from(window.atob(base64id), c=>c.charCodeAt(0));
       var authenticatorSelectionCriteria = {
-        authenticatorAttachment: "cross-platform",
-        requireResidentKey: false,
+        authenticatorAttachment: "platform",
+        requireResidentKey: true,
         userVerification: "preferred"
       };
       
