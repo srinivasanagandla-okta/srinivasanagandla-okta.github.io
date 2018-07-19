@@ -1,5 +1,27 @@
 <html>
   <script>
+    function verifyWithUserNameSelector() {
+      var randomChallengeBuffer = new Uint8Array(32); 
+      window.crypto.getRandomValues(randomChallengeBuffer); 
+      var base64id = 'MIIBkzCCATigAwIBAjCCAZMwggE4oAMCAQIwggGTMII=';
+      var idBuffer = Uint8Array.from(window.atob(base64id), c=>c.charCodeAt(0));
+
+      var verifyOptions = {
+        challenge: idBuffer,
+        pubKeyCredParams: [
+          {type: "public-key", alg: -7},
+          {type: "public-key", alg: -257}
+        ]
+      }
+
+      navigator.credentials.get({ publicKey: verifyOptions})
+        .then(function (credential) {
+            console.log(credential);
+          }).catch(function (err) {
+                console.log(err);
+          });
+    }
+
     function verify() {
       var randomChallengeBuffer = new Uint8Array(32); 
       window.crypto.getRandomValues(randomChallengeBuffer); 
@@ -76,6 +98,7 @@
   </script>
 <body>
 <input type="button" name="enroll" value="enroll" onclick="enroll()">
-<input type="button" name="enroll" value="verify" onclick="verify()">
+<input type="button" name="verify" value="verify" onclick="verify()">
+<input type="button" name="verify_with_username_selector" value="verify" onclick="verifyWithUserNameSelector()">  
 </body>
 </html>
