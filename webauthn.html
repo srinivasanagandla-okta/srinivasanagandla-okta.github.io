@@ -7,7 +7,7 @@
       var idBuffer = Uint8Array.from(window.atob(base64id), c=>c.charCodeAt(0));
       var authenticatorSelectionCriteria = {
         requireResidentKey: false,
-        userVerification: "optional"
+        userVerification: "discouraged"
       };
       
       var verifyOptions = {
@@ -65,7 +65,7 @@
       var authenticatorSelectionCriteria = {
         authenticatorAttachment: "platform",
         requireResidentKey: true,
-        userVerification: "preferred"
+        userVerification: "discouraged"
       };
       
       var enrollExtensions = {
@@ -86,7 +86,8 @@
         pubKeyCredParams: [
           {type: "public-key", alg: -7},
           {type: "public-key", alg: -257}
-        ]
+        ],
+        userVerification: "discouraged"
       }
       navigator.credentials.create({
                 publicKey: makeCredentialOptions
