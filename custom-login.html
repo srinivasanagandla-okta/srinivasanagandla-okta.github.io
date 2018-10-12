@@ -1,9 +1,20 @@
 <html lang="en-us">
 <head>
 <title>Example Okta Sign-In Widget</title>
-<script src="https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/2.6.0/js/okta-sign-in.min.js" type="text/javascript"></script>
-<link href="https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/2.6.0/css/okta-sign-in.min.css" type="text/css" rel="stylesheet"/>
-<link href="https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/2.6.0/css/okta-theme.css" type="text/css" rel="stylesheet"/>
+<!-- Latest CDN production Javascript and CSS: 2.6.0 -->
+<script
+  src="https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/2.6.0/js/okta-sign-in.min.js"
+  type="text/javascript"></script>
+<link
+  href="https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/2.6.0/css/okta-sign-in.min.css"
+  type="text/css"
+  rel="stylesheet"/>
+
+<!-- Theme file: Customize or replace this file if you want to override our default styles -->
+<link
+  href="https://ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/2.6.0/css/okta-theme.css"
+  type="text/css"
+  rel="stylesheet"/>
 </head>
 <body>
   <!-- Render the login widget here -->
@@ -11,25 +22,31 @@
 
   <!-- Script to init the widget -->
   <script>
-    
     var orgUrl = 'https://snagandla.oktapreview.com';
     var inputStateToken = getUrlParameter("stateToken");
-    var oktaSignIn = new OktaSignIn({baseUrl: orgUrl, stateToken: inputStateToken});
-
-    oktaSignIn.renderEl(
-      { el: '#okta-login-container' },
-      function (res) {
-        if (res.status === 'SUCCESS') { 
-            window.location = orgUrl + "/login/step-up/redirect?stateToken="+inputStateToken;
-        }
-      }
-    );
-    
+    var signIn = null;
+    if (inputStateToken) {
+      signIn = new OktaSignIn({baseUrl: 'https://snagandla.oktapreview.com', stateToken: inputStateToken});
+    } else {
+      signIn = new OktaSignIn({baseUrl: 'https://snagandla.oktapreview.com'});
+    }
+  signIn.renderEl({
+    el: '#widget-container'
+  }, function success(res) {
+    if (res.status === 'SUCCESS') {
+      console.log('Do something with this sessionToken', res.session.token);
+    } else {
+    // The user can be in another authentication state that requires further action.
+    // For more information about these states, see:
+    //   https://github.com/okta/okta-signin-widget#rendereloptions-success-error
+    }
+  });
+  </script>
+  <script>
   function getUrlParameter(name){
    if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
       return decodeURIComponent(name[1]);
   }
-
   </script>
 </body>
 </html>
