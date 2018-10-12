@@ -22,6 +22,11 @@
 
   <!-- Script to init the widget -->
   <script>
+  function getUrlParameter(name){
+   if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
+      return decodeURIComponent(name[1]);
+  }
+
     var orgUrl = 'https://snagandla.oktapreview.com';
     var inputStateToken = getUrlParameter("stateToken");
     var signIn = null;
@@ -41,12 +46,6 @@
     //   https://github.com/okta/okta-signin-widget#rendereloptions-success-error
     }
   });
-  </script>
-  <script>
-  function getUrlParameter(name){
-   if(name=(new RegExp('[?&]'+encodeURIComponent(name)+'=([^&]*)')).exec(location.search))
-      return decodeURIComponent(name[1]);
-  }
   </script>
 </body>
 </html>
