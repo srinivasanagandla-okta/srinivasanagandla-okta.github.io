@@ -1,0 +1,49 @@
+<html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="style.css?version=5">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
+    <script>mermaid.initialize({ startOnLoad: true });
+
+        function generate() {
+            document.getElementById('imageDiv').innerHTML = "";
+            var rawText = document.getElementById("inputText").textContent;
+            alert(rawText);
+            mermaid.render('the-id', rawText, g => {
+                document.getElementById('imageDiv').innerHTML = g;
+            });
+        }
+        $(document).ready(function () {
+            $('#title').focus();
+            $('#inputText').autosize();
+        });
+    </script>
+</head>
+
+<body>
+    <div id="container">
+        <div id="one">
+            <div id="wrapper">
+                <!--<div id="margin">Title: <input id="title" type="text" name="title"></div>-->
+                <textarea placeholder="Enter something funny." id="inputText" name="text" rows="20"
+                    style="overflow: auto; word-wrap: break-word; resize: both;">
+                    graph TD
+                    A[Christmas] -->|Get money| B(Go shopping)
+                    B --> C{Let me think}
+                    C -->|One| D[Laptop]
+                    C -->|Two| E[iPhone]
+                    C -->|Three| F[fa:fa-car Car]
+                </textarea>
+                <br>
+                <input id="button" type="button" value="Create" onclick="generate()">
+            </div>
+        </div>
+        <div id="two">
+            <div id="imageWrapper">
+                <div id="imageDiv" class="center">Result</div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
