@@ -10,6 +10,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
     <script>
+        
+        /*
         mermaid.initialize(
             {
                 startOnLoad: true,
@@ -19,14 +21,119 @@
                     curve: 'cardinal',
                 }
             }
-        );
+        );*/
 
         function generate() {
-            document.getElementById('imageDiv').innerHTML = "";
-            var rawText = document.getElementById("inputText").textContent;
-            mermaid.render('the-id', rawText, g => {
-                document.getElementById('imageDiv').innerHTML = g;
-            });
+            var rawText = $("#inputText").val();
+            try {
+                mermaid.initialize({startOnLoad: true});
+                mermaid.render('the-id', rawText, g => {
+                    //Remove existing image
+                    if ($("#imageDiv").children().length > 0) {
+                        $("#imageDiv").empty();
+                    }
+                    //Attach the newly generated image
+                    document.getElementById('imageDiv').innerHTML = g;
+                });
+            } catch(e) {
+                alert("Error while generating the diagram"+e);
+            }
+        }
+
+        function setDefaultContent() {
+            var typeOfDiagram = $( "#selectType" ).val();
+            switch (typeOfDiagram) {
+                case "flow": setDefaultFlowChartText(); break;
+                case "sequence": setDefaultSequenceDiagramText(); break;
+                case "class": setDefaultClassDiagramText(); break;
+                case "state": setDefaultStateDiagramText(); break;
+                case "gantt": setDefaultGanttChartText(); break;
+                case "pie": setDefaultPieChartText(); break;
+                case "er": setDefaultERDiagramText(); break;
+                default: break;
+            }
+            generate();
+        }
+
+        function setDefaultFlowChartText() {
+            $("textarea#inputText").val("graph TD\n" +
+                "\tA[Christmas] -->|Get money| B(Go shopping)\n" +
+                "\tB --> C{Let me think}\n" +
+                "\tC -->|One| D[Laptop]\n" +
+                "\tC -->|Two| E[iPhone]\n" +
+                "\tC -->|Three| F[fa:fa-car Car]");
+        }
+
+        function setDefaultSequenceDiagramText() {
+            $("textarea#inputText").val("sequenceDiagram\n"+
+            "Alice->>John: Hello John, how are you?\n"+
+            "John-->>Alice: Great!");
+        }
+
+        function setDefaultClassDiagramText() {
+            $("textarea#inputText").val("classDiagram\n" +
+                "\tAnimal <|-- Duck\n" +
+                "\tAnimal <|-- Fish\n" +
+                "\tAnimal <|-- Zebra\n" +
+                "\tAnimal : +int age\n" +
+                "\tAnimal : +String gender\n" +
+                "\tAnimal: +isMammal()\n" +
+                "\tAnimal: +mate()\n" +
+                "\tclass Duck{\n" +
+                "\t\t+String beakColor\n" +
+                "\t\t+swim()\n" +
+                "\t\t+quack()\n" +
+                "\t}\n" +
+                "\tclass Fish{\n" +
+                "\t\t-int sizeInFeet\n" +
+                "\t\t-canEat()\n" +
+                "\t}\n" +
+                "\tclass Zebra{\n" +
+                "\t\t+bool is_wild\n" +
+                "\t\t+run()\n" +
+                "\t}");
+        }
+
+        function setDefaultStateDiagramText() {
+            $("textarea#inputText").val("stateDiagram\n" +
+                "\t[*] --> Still\n" +
+                "\tStill --> [*]\n" +
+                "\n" +
+                "\tStill --> Moving\n" +
+                "\tMoving --> Still\n" +
+                "\tMoving --> Crash\n" +
+                "\tCrash --> [*]");
+        }
+
+        function setDefaultGanttChartText() {
+            $("textarea#inputText").val("gantt\n" +
+                "\ttitle A Gantt Diagram\n" +
+                "\tdateFormat  YYYY-MM-DD\n" +
+                "\tsection Section\n" +
+                "\tA task           :a1, 2014-01-01, 30d\n" +
+                "\tAnother task     :after a1  , 20d\n" +
+                "\tsection Another\n" +
+                "\tTask in sec      :2014-01-12  , 12d\n" +
+                "\tanother task      : 24d");
+        }
+
+        function setDefaultPieChartText() {
+            $("textarea#inputText").val("pie title Pets adopted by volunteers\n" +
+                "\t\"Dogs\" : 386\n" +
+                "\t\"Cats\" : 85\n" +
+                "\t\"Rats\" : 15");
+        }
+
+        function setDefaultERDiagramText() {
+            $("textarea#inputText").val("erDiagram\n" +
+                "        CUSTOMER }|..|{ DELIVERY-ADDRESS : has\n" +
+                "        CUSTOMER ||--o{ ORDER : places\n" +
+                "        CUSTOMER ||--o{ INVOICE : \"liable for\"\n" +
+                "        DELIVERY-ADDRESS ||--o{ ORDER : receives\n" +
+                "        INVOICE ||--|{ ORDER : covers\n" +
+                "        ORDER ||--|{ ORDER-ITEM : includes\n" +
+                "        PRODUCT-CATEGORY ||--|{ PRODUCT : contains\n" +
+                "        PRODUCT ||--o{ ORDER-ITEM : \"ordered in\"");
         }
     </script>
 </head>
@@ -50,9 +157,15 @@
                                     Select Diagram Type
                                 </span>
                             </div>
-                            <select name="selectType" id="selectType" class="form-control">
-                                <option value="sequence" selected>Sequence Diagram</option>
-                                <option value="flowchart">Flowchart</option>
+                            <select name="selectType" id="selectType" class="form-control" onchange="setDefaultContent()">
+                                <option value="select">--Select--</option>
+                                <option value="sequence">Sequence Diagram</option>
+                                <option value="flow">Flow Chart</option>
+                                <option value="class">Class Diagram</option>
+                                <option value="state">State Diagram</option>
+                                <option value="gantt">Gantt Chart</option>
+                                <option value="pie">Pie Chart</option>
+                                <option value="er">ER Diagram</option>
                             </select>
                         </div>
                     </div>
@@ -60,9 +173,6 @@
                         <div class="input-group">
                             <textarea id="inputText" class="form-control h-75 w-100 d-inline-block" name="text"
                                 rows="20" style="resize: both;">
-sequenceDiagram
-Alice->>John: Hello John, how are you?
-John-->>Alice: Great!
                         </textarea>
                         </div>
                     </div>
