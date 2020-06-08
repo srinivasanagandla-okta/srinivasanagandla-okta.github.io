@@ -3,13 +3,15 @@
 }
 
 #one {
-    width: 50%;
+    width: 40%;
     float: left;
+    margin-left: 10px;
 }
 
 #two {
-    width: 50%;
+    width: 60%;
     float: right;
+    margin-right: 10px;
 }
 
 @media all and (max-width:800px) {
@@ -32,11 +34,6 @@
   body {
     background-image: url(https://static.tumblr.com/maopbtg/nBUmgtogx/paper.png);
   }
-  /*
-  body {
-      background: url(https://static.tumblr.com/maopbtg/nBUmgtogx/paper.png) repeat;
-      url(https://static.tumblr.com/maopbtg/a5emgtoju/inflicted.png) repeat;       
-  }*/
   #paper {
       color:#FFF;
       font-size:20px;
@@ -51,7 +48,7 @@
       user-select: none; 
   }
   #inputText {
-      width:500px;
+/*      width:500px;*/
       margin-left: 10px;
       overflow:hidden;
       background-color:#FFF;
@@ -61,8 +58,8 @@
       font-size:24px;
       resize:none;
       line-height:40px;
-      padding-left:100px;
-      padding-right:100px;
+   /*   padding-left:100px;
+      padding-right:100px;*/
       padding-top:45px;
       padding-bottom:34px;
       background-image:url(https://static.tumblr.com/maopbtg/E9Bmgtoht/lines.png), url(https://static.tumblr.com/maopbtg/nBUmgtogx/paper.png);
@@ -82,7 +79,7 @@
       font-family:Courier, monospace;
       height:28px;
       font-weight:bold;
-      width:220px;
+      /*width:220px;*/
   }
   #button {
       cursor:pointer;
@@ -116,21 +113,21 @@
       opacity: 0.8;
   }
   #wrapper {
-      width:700px;
+      width:40%;
       height:auto;
       margin-left:auto;
       margin-right:auto;
       margin-top:24px;
-      margin-bottom:100px;
+     /* margin-bottom:100px;*/
   }
 
   #imageWrapper {
-    width:700px;
+    width:60%;
     height:auto;
     margin-left:auto;
     margin-right:auto;
     margin-top:24px;
-    margin-bottom:100px;
+   /* margin-bottom:100px;*/
     -webkit-border-radius:12px;
     border-radius:12px;
     -webkit-box-shadow: 0px 2px 14px #000;
@@ -138,3 +135,10 @@
     border-top:1px solid #FFF;
     border-bottom:1px solid #FFF;
 }
+
+.center {
+    margin: auto;
+    width: 50%;
+    border: 3px solid green;
+    padding: 10px;
+  }

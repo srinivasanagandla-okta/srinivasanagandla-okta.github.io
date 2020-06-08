@@ -1,0 +1,107 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Draw diagrams using just text</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize(
+            {
+                startOnLoad: true,
+                flowchart: {
+                    useMaxWidth: true,
+                    htmlLabels: true,
+                    curve: 'cardinal',
+                }
+            }
+        );
+
+        function generate() {
+            document.getElementById('imageDiv').innerHTML = "";
+            var rawText = document.getElementById("inputText").textContent;
+            mermaid.render('the-id', rawText, g => {
+                document.getElementById('imageDiv').innerHTML = g;
+            });
+        }
+    </script>
+</head>
+
+<body background="https://static.tumblr.com/maopbtg/nBUmgtogx/paper.png">
+    <div class="container-fluid">
+        <div class="row">
+            &nbsp;
+        </div>
+        <h3 style="text-align: center;">Create Diagrams using text</h3>
+        <div class="row">
+            &nbsp;
+        </div>
+        <div class="row">
+            <div class="col-xl-4">
+                <form>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    Select Diagram Type
+                                </span>
+                            </div>
+                            <select name="selectType" id="selectType" class="form-control">
+                                <option value="sequence" selected>Sequence Diagram</option>
+                                <option value="flowchart">Flowchart</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <textarea id="inputText" class="form-control h-75 w-100 d-inline-block" name="text"
+                                rows="20" style="resize: both;">
+sequenceDiagram
+Alice->>John: Hello John, how are you?
+John-->>Alice: Great!
+                        </textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="col-xl-8">
+                <div class="row">
+                    &nbsp;
+                </div>
+                <div class="row">
+                    &nbsp;
+                </div>
+
+                <div id="imageDiv" class="card h-75 w-100 d-inline-block">
+                    Click "Draw" to see the diagram here...
+                </div>
+                <div>
+                    &nbsp;
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            &nbsp;
+        </div>
+        <div class="row">
+            <div class="col-xl-1"></div>
+            <div class="col-xl-3">
+                <div class="form-group">
+                    <div class="input-group">
+                        <button type="button" class="btn btn-primary btn-lg" onclick="generate()">Draw</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-8">
+                <button type="button" class="btn btn-primary btn-lg" onclick="download()">Download</button>
+                <button type="button" class="btn btn-secondary btn-lg" onclick="save()">Save</button>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

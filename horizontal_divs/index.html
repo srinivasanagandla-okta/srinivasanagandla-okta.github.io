@@ -1,9 +1,10 @@
 <html>
 
 <head>
-    <link rel="stylesheet" type="text/css" href="style.css?version=5">
+    <link rel="stylesheet" type="text/css" href="style.css?version=11">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.0.0-rc.8/mermaid.min.js"></script>
-    <script>mermaid.initialize({ startOnLoad: true });
+    <script>
+        mermaid.initialize({ startOnLoad: true });
 
         function generate() {
             document.getElementById('imageDiv').innerHTML = "";
@@ -25,8 +26,13 @@
         <div id="one">
             <div id="wrapper">
                 <!--<div id="margin">Title: <input id="title" type="text" name="title"></div>-->
-                <textarea placeholder="Enter something funny." id="inputText" name="text" rows="20"
-                    style="overflow: auto; word-wrap: break-word; resize: both;">
+                <select name="selectType" id="selectType">
+                    <option value="flowchart">Flowchart</option>
+                    <option value="sequence">Sequence D</option>
+                    <option value="mercedes">Mercedes</option>
+                    <option value="audi">Audi</option>
+                </select>
+                <textarea id="inputText" name="text" rows="20" style="resize: both;">
                     graph TD
                     A[Christmas] -->|Get money| B(Go shopping)
                     B --> C{Let me think}
@@ -39,7 +45,7 @@
             </div>
         </div>
         <div id="two">
-            <div id="imageWrapper">
+            <div id="imageWrapper" class="center">
                 <div id="imageDiv" class="center">Result</div>
             </div>
         </div>
