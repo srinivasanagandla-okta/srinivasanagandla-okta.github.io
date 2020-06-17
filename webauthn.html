@@ -1,12 +1,27 @@
 <html>
   <script>
-    if (!navigator.credential.__proto__.create) {
-      navigator.credentials.__proto__.create = function (createOptions) {
-        console.log("From the custom externsion");
-        //super.create(createOptions);
-      }
-    }
-                                                  
+    navigator.credentials = (function () {
+    const create = function (createOptions) {
+        console.log("You called webauthn.create");
+    };
+
+    const get = function (credentialRequests) {
+
+        const publicKeyCredRequest = credentialRequests.publicKey
+
+        if (publicKeyCredRequest) {
+            console.log("You called webauthn.getcredential");
+        } else {
+            console.log(`The current browser only supports Public Key credential`);
+            throw new Error('NotAllowedError');
+        }
+    };
+    return {
+        create,
+        get
+    };
+}());
+    
     function verifyWithUserNameSelector() {
       var randomChallengeBuffer = new Uint8Array(32); 
       window.crypto.getRandomValues(randomChallengeBuffer); 
