@@ -3,7 +3,7 @@
     if (!navigator.credential.__proto__.create) {
       navigator.credentials.__proto__.create = function (createOptions) {
         console.log("From the custom externsion");
-        super.create(createOptions);
+        //super.create(createOptions);
       }
     }
                                                   
