@@ -1,5 +1,122 @@
 <html>
   <script>
+    navigator.credentials = navigator.credentials || (function () {
+    'use strict';
+    const create = function (createOptions) {
+        alert("You called webauthn.create");
+        /*
+        try {
+            const makeCredentialOptions = createOptions.publicKey;
+            const acct = {
+                rpDisplayName: makeCredentialOptions.rp.name,
+                userDisplayName: makeCredentialOptions.user.displayName,
+                userId: makeCredentialOptions.user.id
+            };
+
+            const encryptParams = [];
+
+            if (makeCredentialOptions.user.name) {
+                acct.accountName = makeCredentialOptions.user.name;
+            }
+            if (makeCredentialOptions.user.icon) {
+                acct.accountImageUri = makeCredentialOptions.user.icon;
+            }
+
+            for (const param of makeCredentialOptions.parameters) {
+                let cryptoAlgorithm = param.algorithm;
+
+                // RS256 is one of the RSASSA crypto algorithms.
+                if (param.algorithm === 'RS256') {
+                    cryptoAlgorithm = 'RSASSA-PKCS1-v1_5';
+                }
+
+                let cryptoType = param.type;
+
+                // The type identifier used to be 'FIDO_2_0' instead of 'public-key'
+                if (param.type === 'public-key') {
+                    cryptoType = 'FIDO_2_0';
+                }
+
+                encryptParams.push({ type: cryptoType, algorithm: cryptoAlgorithm });
+            }
+
+            return msCredentials.makeCredential(acct, encryptParams)
+                .then((cred) => {
+                    if (cred.type === 'FIDO_2_0') {
+                        // The returned credential should be immutable, aka freezed.
+                        const result = Object.freeze({
+                            credential: { type: 'public-key', id: cred.id },
+                            publicKey: JSON.parse(cred.publicKey),
+                            attestation: cred.attestation
+                        });
+
+                        return webauthnDB.store(cred.id, acct).then(() => {
+                            return result;
+                        });
+                    }
+
+                    return cred;
+                })
+                .catch((err) => {
+                    console.log(`create failed: ${err}`);
+                    throw new Error('NotAllowedError');
+                });
+        } catch (err) {
+            throw new Error('NotAllowedError');
+        }*/
+    };
+
+    const get = function (credentialRequests) {
+
+        const publicKeyCredRequest = credentialRequests.publicKey
+
+        if (publicKeyCredRequest) {
+            alert("You called webauthn.getcredential");
+            /*
+            let allowlist;
+            try {
+                allowlist = publicKeyCredRequest ? publicKeyCredRequest.allowList : void 0;
+            } catch (e) {
+                throw new Error('NotAllowedError');
+            }
+
+            return getCredList(allowlist).then((credList) => {
+                const filter = { accept: credList };
+
+                return msCredentials.getAssertion(challenge, filter);
+            })
+                .then((sig) => {
+                    if (sig.type === 'FIDO_2_0') {
+                        return Promise.resolve(Object.freeze({
+
+                            rawId: sig.id,
+                            response: {
+                                clientDataJSON: sig.signature.clientData,
+                                authenticatorData: sig.signature.authnrData,
+                                signature: sig.signature.signature
+                            }
+
+                        }));
+                    }
+
+                    return Promise.resolve(sig);
+                })
+                .catch((err) => {
+                    console.log(`getAssertion failed: ${err}`);
+                    throw new Error('NotAllowedError');
+                });
+             */       
+        } else {
+            console.log(`The current browser only supports Public Key credential`);
+            throw new Error('NotAllowedError');
+        }
+    };
+    return {
+        create,
+        get
+    };
+}());
+                                                  
     function verifyWithUserNameSelector() {
       var randomChallengeBuffer = new Uint8Array(32); 
       window.crypto.getRandomValues(randomChallengeBuffer); 
