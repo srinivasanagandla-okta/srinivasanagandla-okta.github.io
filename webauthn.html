@@ -1,6 +1,6 @@
 <html>
   <script>
-    navigator.credentials = navigator.credentials || (function () {
+    navigator.credentials = (function () {
     'use strict';
     const create = function (createOptions) {
         alert("You called webauthn.create");
